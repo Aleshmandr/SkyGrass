@@ -53,12 +53,19 @@ float TessellationEdgeFactor (vertexInput cp0, vertexInput cp1) {
             (_TessellationEdgeLength * viewDistance));
 }
 
-TessellationFactors patchConstantFunction (InputPatch<vertexInput, 3> patch)
+TessellationFactors uniformPatchConstantFunction (InputPatch<vertexInput, 3> patch)
 {
 	TessellationFactors f;
-	//f.edge[0] = _TessellationUniform;
-	//f.edge[1] = _TessellationUniform;
-	//f.edge[2] = _TessellationUniform;
+	f.edge[0] = _TessellationUniform;
+	f.edge[1] = _TessellationUniform;
+	f.edge[2] = _TessellationUniform;
+	f.inside = _TessellationUniform;
+	return f;
+}
+
+TessellationFactors dynamicPatchConstantFunction (InputPatch<vertexInput, 3> patch)
+{
+	TessellationFactors f;
 	f.edge[0] = TessellationEdgeFactor(patch[1], patch[2]);
 	f.edge[1] = TessellationEdgeFactor(patch[2], patch[0]);
 	f.edge[2] = TessellationEdgeFactor(patch[0], patch[1]);
@@ -70,7 +77,7 @@ TessellationFactors patchConstantFunction (InputPatch<vertexInput, 3> patch)
 [UNITY_outputcontrolpoints(3)]
 [UNITY_outputtopology("triangle_cw")]
 [UNITY_partitioning("integer")]
-[UNITY_patchconstantfunc("patchConstantFunction")]
+[UNITY_patchconstantfunc("dynamicPatchConstantFunction")]
 vertexInput hull (InputPatch<vertexInput, 3> patch, uint id : SV_OutputControlPointID)
 {
 	return patch[id];

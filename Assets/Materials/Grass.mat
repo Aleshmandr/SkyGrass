@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Grass
-  m_Shader: {fileID: 4800000, guid: 4e81f797fc6664fd8b988b402c4b2891, type: 3}
+  m_Shader: {fileID: 4800000, guid: f5d0fde071320ee40b730bbd84b1e07d, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -72,7 +72,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Height: 0.27
+    - _Height: 0.34
     - _HeightOffset: 0
     - _Metallic: 0
     - _Mode: 0
@@ -83,20 +83,20 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _StartHeight: 2.05
-    - _TessellationEdgeLength: 0.001
-    - _TessellationUniform: 4.5
-    - _Translucency: 0.75
+    - _TessellationEdgeLength: 11.71
+    - _TessellationUniform: 3.6
+    - _Translucency: 0.85
     - _TranslucentGain: 0.5
     - _UVSec: 0
-    - _Width: 0.1
+    - _Width: 0.07
     - _WindStrength: 2
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color1: {r: 0.063055545, g: 0.22700001, b: 0.07566667, a: 0}
-    - _Color2: {r: 0.12568085, g: 0.71599996, b: 0.17138293, a: 0.59607846}
+    - _Color1: {r: 0.22352943, g: 0.4156863, b: 0.08235294, a: 0}
+    - _Color2: {r: 0.018971607, g: 0.681, b: 0.018306434, a: 0.59607846}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RandomPosition: {r: 0.53, g: 0.05, b: 0.32, a: 0}
+    - _RandomPosition: {r: 0.83, g: 0.05, b: 0.73, a: 0}
     - _WindDir: {r: 0.3, g: 0, b: 0.18, a: 0}
     - _WindFrequency: {r: 0.03, g: 0.03, b: 0, a: 0}
   m_BuildTextureStacks: []

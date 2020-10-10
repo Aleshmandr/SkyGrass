@@ -56,7 +56,7 @@ void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
     float3 grassDirection = normalize(fixed3(0, 1, 0) + wind);
 
     //Use camera forward instead view dir
-    fixed3 viewDir = UNITY_MATRIX_IT_MV[2].xyz;
+    fixed3 viewDir = UNITY_MATRIX_IT_MV[2].xyz;//normalize(WorldSpaceViewDir(root));
 
     fixed4 left = float4(normalize(cross(viewDir, grassDirection).xyz), 0);
 
@@ -103,7 +103,7 @@ void geomTriangle(triangle v2g i[3], inout TriangleStream<g2f> triStream)
 
 fixed3 sampleLight(g2f i)
 {
-    fixed lightDot = dot(i.worldPos, UnityWorldSpaceLightDir(i.worldNorm));
+    fixed lightDot = dot(i.worldNorm, UnityWorldSpaceLightDir(i.worldPos));
     fixed3 diffuseLight = saturate(saturate(lightDot) + _Translucency) * _LightColor0;
 
     float shadow = SHADOW_ATTENUATION(i);

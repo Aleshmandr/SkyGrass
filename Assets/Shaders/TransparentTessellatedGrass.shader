@@ -2,8 +2,8 @@
 {
     Properties
     {
-        _Color1("Color 1", Color) =(1,1,1,1)
-        _Color2("Color 2", Color) = (0,0,0,0)
+        _MainTex ("Texture", 2D) = "white" {}
+        _Color("Color", Color) =(1,1,1,1)
         _TessellationUniform ("Tessellation Uniform", Range(1, 64)) = 1
         _TessellationEdgeLength ("Tessellation Edge Length", float) = 1
         _Height("Height", float) = 3
@@ -21,11 +21,13 @@
     {
          Tags
         {
-            "Queue" = "Transparent"
+            "Queue" = "AlphaTest"
             "RenderType" = "Transparent"
             "LightMode" = "ForwardBase"
             "IgnoreProjector" = "True"
         }
+        
+        ZWrite Off
         
         Blend SrcAlpha OneMinusSrcAlpha
         
@@ -43,16 +45,18 @@
             #pragma geometry geomTriangle
             #pragma multi_compile_fwdbase
 
-            fixed4 _Color1;
-            fixed4 _Color2;
+            fixed4 _Color;
+            sampler2D _MainTex;
+            fixed4 _MainTex_ST;
 
             half4 frag(g2f i) : COLOR
             {
-                fixed4 color = lerp(_Color1, _Color2, i.uv.y);
+                fixed4 color = tex2D(_MainTex, i.uv) * _Color;
                 color.rgb *= sampleLight(i);
                 return color;
             }
             ENDCG
         }
     }
+    Fallback "VertexLit"
 }
