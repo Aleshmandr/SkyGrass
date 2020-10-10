@@ -24,7 +24,7 @@ struct v2g
 
 struct g2f
 {
-    float4 worldPos : SV_POSITION;
+    float4 pos : SV_POSITION;
     float3 worldNorm : NORMAL;
     unityShadowCoord4 _ShadowCoord : TEXCOORD1;
     #if !UNITY_PASS_SHADOWCASTER
@@ -59,6 +59,7 @@ void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
 
     //Use camera forward instead view dir
     fixed3 viewDir = UNITY_MATRIX_IT_MV[2].xyz;
+    
 
     fixed4 left = float4(normalize(cross(viewDir, grassDirection).xyz), 0);
 
@@ -69,16 +70,16 @@ void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
 
     half3 worldNormal = UnityObjectToWorldNormal(norm);
 
-    v[0].worldPos = UnityObjectToClipPos(grassBottom);
+    v[0].pos = UnityObjectToClipPos(grassBottom);
     v[0].worldNorm = worldNormal;
 
-    v[1].worldPos = UnityObjectToClipPos(grassBottom + left * _Width);
+    v[1].pos = UnityObjectToClipPos(grassBottom + left * _Width);
     v[1].worldNorm = worldNormal;
 
-    v[2].worldPos = UnityObjectToClipPos(grassTop);
+    v[2].pos = UnityObjectToClipPos(grassTop);
     v[2].worldNorm = worldNormal;
 
-    v[3].worldPos = UnityObjectToClipPos(grassTop + left * _Width);
+    v[3].pos = UnityObjectToClipPos(grassTop + left * _Width);
     v[3].worldNorm = worldNormal;
     
     #if SIMPLE_SHADOW
@@ -87,10 +88,10 @@ void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
     v[2]._ShadowCoord = ComputeScreenPos(v[0].worldPos);
     v[3]._ShadowCoord = ComputeScreenPos(v[1].worldPos);
     #else
-    v[0]._ShadowCoord = ComputeScreenPos(v[0].worldPos);
-    v[1]._ShadowCoord = ComputeScreenPos(v[1].worldPos);
-    v[2]._ShadowCoord = ComputeScreenPos(v[2].worldPos);
-    v[3]._ShadowCoord = ComputeScreenPos(v[3].worldPos);
+    v[0]._ShadowCoord = ComputeScreenPos(v[0].pos);
+    v[1]._ShadowCoord = ComputeScreenPos(v[1].pos);
+    v[2]._ShadowCoord = ComputeScreenPos(v[2].pos);
+    v[3]._ShadowCoord = ComputeScreenPos(v[3].pos);
     #endif
 
 
@@ -118,7 +119,7 @@ void geomTriangle(triangle v2g i[3], inout TriangleStream<g2f> triStream)
 fixed3 sampleLight(g2f i)
 {
     #if !UNITY_PASS_SHADOWCASTER
-    fixed lightDot = dot(i.worldNorm, UnityWorldSpaceLightDir(i.worldPos));
+    fixed lightDot = dot(i.worldNorm, normalize(_WorldSpaceLightPos0.xyz));
     fixed3 diffuseLight = saturate(saturate(lightDot) + _Translucency) * _LightColor0;
     float shadow = SHADOW_ATTENUATION(i);
     fixed3 ambient = ShadeSH9(half4(i.worldNorm, 1));
