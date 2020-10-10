@@ -72,7 +72,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Height: 0.34
+    - _Height: 0.36
     - _HeightOffset: 0
     - _Metallic: 0
     - _Mode: 0
@@ -83,17 +83,17 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _StartHeight: 2.05
-    - _TessellationEdgeLength: 11.71
-    - _TessellationUniform: 3.6
+    - _TessellationEdgeLength: 10
+    - _TessellationUniform: 4.5
     - _Translucency: 0.85
     - _TranslucentGain: 0.5
     - _UVSec: 0
-    - _Width: 0.07
+    - _Width: 0.1
     - _WindStrength: 2
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color1: {r: 0.22352943, g: 0.4156863, b: 0.08235294, a: 0}
+    - _Color1: {r: 0.15271698, g: 0.284, b: 0.05626415, a: 0}
     - _Color2: {r: 0.018971607, g: 0.681, b: 0.018306434, a: 0.59607846}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _RandomPosition: {r: 0.83, g: 0.05, b: 0.73, a: 0}

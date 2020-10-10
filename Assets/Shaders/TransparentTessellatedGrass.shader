@@ -19,20 +19,20 @@
 
     SubShader
     {
-         Tags
+        Pass
         {
-            "Queue" = "AlphaTest"
-            "RenderType" = "Transparent"
-            "LightMode" = "ForwardBase"
-            "IgnoreProjector" = "True"
-        }
-        
-        ZWrite Off
-        
-        Blend SrcAlpha OneMinusSrcAlpha
-        
-         Pass
-        {
+            Tags
+            {
+                "Queue" = "AlphaTest"
+                "RenderType" = "Transparent"
+                "LightMode" = "ForwardBase"
+                "IgnoreProjector" = "True"
+            }
+
+            ZWrite Off
+
+            Blend SrcAlpha OneMinusSrcAlpha
+
             CGPROGRAM
             #include "UnityCG.cginc"
             #include "GeometryGrass.cginc"
@@ -54,6 +54,32 @@
                 fixed4 color = tex2D(_MainTex, i.uv) * _Color;
                 color.rgb *= sampleLight(i);
                 return color;
+            }
+            ENDCG
+        }
+
+        Pass
+        {
+            Tags
+            {
+                "LightMode" = "ShadowCaster"
+            }
+
+            CGPROGRAM
+            #include "UnityCG.cginc"
+            #include "GeometryGrass.cginc"
+            #include "Tessellation.cginc"
+            #pragma target 4.6
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma hull hull
+            #pragma domain domain
+            #pragma geometry geomTriangle
+            #pragma multi_compile_shadowcaster
+
+            float4 frag(g2f i) : SV_Target
+            {
+                SHADOW_CASTER_FRAGMENT(i);
             }
             ENDCG
         }

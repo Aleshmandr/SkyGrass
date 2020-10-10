@@ -18,16 +18,18 @@ struct v2g
 {
     float4 pos : SV_POSITION;
     float3 norm : NORMAL;
-    float2 uv : TEXCOORD0;
     float4 tangent : TANGENT;
+    float2 uv : TEXCOORD0;
 };
 
 struct g2f
 {
     float4 worldPos : SV_POSITION;
     float3 worldNorm : NORMAL;
-    float2 uv : TEXCOORD0;
     unityShadowCoord4 _ShadowCoord : TEXCOORD1;
+    #if !UNITY_PASS_SHADOWCASTER
+    float2 uv : TEXCOORD0;
+    #endif
 };
 
 float random(float3 co)
@@ -56,7 +58,7 @@ void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
     float3 grassDirection = normalize(fixed3(0, 1, 0) + wind);
 
     //Use camera forward instead view dir
-    fixed3 viewDir = UNITY_MATRIX_IT_MV[2].xyz;//normalize(WorldSpaceViewDir(root));
+    fixed3 viewDir = UNITY_MATRIX_IT_MV[2].xyz;
 
     fixed4 left = float4(normalize(cross(viewDir, grassDirection).xyz), 0);
 
@@ -68,24 +70,27 @@ void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
     half3 worldNormal = UnityObjectToWorldNormal(norm);
 
     v[0].worldPos = UnityObjectToClipPos(grassBottom);
-    v[0].uv = float2(0, 0);
     v[0].worldNorm = worldNormal;
     v[0]._ShadowCoord = ComputeScreenPos(v[0].worldPos);
 
     v[1].worldPos = UnityObjectToClipPos(grassBottom + left * _Width);
-    v[1].uv = float2(1, 0);
     v[1].worldNorm = worldNormal;
-    v[1]._ShadowCoord = ComputeScreenPos(v[1].worldPos);
+    v[1]._ShadowCoord = ComputeScreenPos(v[1].worldPos);;
 
     v[2].worldPos = UnityObjectToClipPos(grassTop);
-    v[2].uv = float2(0, 1);
     v[2].worldNorm = worldNormal;
-    v[2]._ShadowCoord = ComputeScreenPos(v[0].worldPos);
+    v[2]._ShadowCoord = ComputeScreenPos(v[2].worldPos);;
 
     v[3].worldPos = UnityObjectToClipPos(grassTop + left * _Width);
-    v[3].uv = float2(1, 1);
     v[3].worldNorm = worldNormal;
-    v[3]._ShadowCoord = ComputeScreenPos(v[1].worldPos);
+    v[3]._ShadowCoord = ComputeScreenPos(v[3].worldPos);
+
+    #if !UNITY_PASS_SHADOWCASTER
+    v[0].uv = float2(0, 0);
+    v[1].uv = float2(1, 0);
+    v[2].uv = float2(0, 1);
+    v[3].uv = float2(1, 1);
+    #endif
 
     triStream.Append(v[0]);
     triStream.Append(v[2]);
@@ -103,10 +108,13 @@ void geomTriangle(triangle v2g i[3], inout TriangleStream<g2f> triStream)
 
 fixed3 sampleLight(g2f i)
 {
+    #if !UNITY_PASS_SHADOWCASTER
     fixed lightDot = dot(i.worldNorm, UnityWorldSpaceLightDir(i.worldPos));
     fixed3 diffuseLight = saturate(saturate(lightDot) + _Translucency) * _LightColor0;
-
     float shadow = SHADOW_ATTENUATION(i);
     fixed3 ambient = ShadeSH9(half4(i.worldNorm, 1));
     return diffuseLight * shadow + ambient;
+    #else
+    return 0;
+    #endif
 }
