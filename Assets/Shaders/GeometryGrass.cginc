@@ -71,19 +71,28 @@ void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
 
     v[0].worldPos = UnityObjectToClipPos(grassBottom);
     v[0].worldNorm = worldNormal;
-    v[0]._ShadowCoord = ComputeScreenPos(v[0].worldPos);
 
     v[1].worldPos = UnityObjectToClipPos(grassBottom + left * _Width);
     v[1].worldNorm = worldNormal;
-    v[1]._ShadowCoord = ComputeScreenPos(v[1].worldPos);;
 
     v[2].worldPos = UnityObjectToClipPos(grassTop);
     v[2].worldNorm = worldNormal;
-    v[2]._ShadowCoord = ComputeScreenPos(v[2].worldPos);;
 
     v[3].worldPos = UnityObjectToClipPos(grassTop + left * _Width);
     v[3].worldNorm = worldNormal;
+    
+    #if SIMPLE_SHADOW
+    v[0]._ShadowCoord = ComputeScreenPos(v[0].worldPos);
+    v[1]._ShadowCoord = ComputeScreenPos(v[1].worldPos);
+    v[2]._ShadowCoord = ComputeScreenPos(v[0].worldPos);
+    v[3]._ShadowCoord = ComputeScreenPos(v[1].worldPos);
+    #else
+    v[0]._ShadowCoord = ComputeScreenPos(v[0].worldPos);
+    v[1]._ShadowCoord = ComputeScreenPos(v[1].worldPos);
+    v[2]._ShadowCoord = ComputeScreenPos(v[2].worldPos);
     v[3]._ShadowCoord = ComputeScreenPos(v[3].worldPos);
+    #endif
+
 
     #if !UNITY_PASS_SHADOWCASTER
     v[0].uv = float2(0, 0);

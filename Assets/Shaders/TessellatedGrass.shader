@@ -30,6 +30,7 @@
             }
 
             CGPROGRAM
+            #define SIMPLE_SHADOW 1
             #include "UnityCG.cginc"
             #include "GeometryGrass.cginc"
             #include "Tessellation.cginc"
@@ -49,32 +50,6 @@
                 fixed4 color = lerp(_Color1, _Color2, i.uv.y).xyzz;
                 color.rgb *= sampleLight(i);
                 return color;
-            }
-            ENDCG
-        }
-        
-        Pass
-        {
-            Tags
-            {
-                "LightMode" = "ShadowCaster"
-            }
-
-            CGPROGRAM
-            #include "UnityCG.cginc"
-            #include "GeometryGrass.cginc"
-            #include "Tessellation.cginc"
-            #pragma target 4.6
-            #pragma vertex vert
-            #pragma fragment frag
-            #pragma hull hull
-            #pragma domain domain
-            #pragma geometry geomTriangle
-            #pragma multi_compile_shadowcaster
-
-            float4 frag(g2f i) : SV_Target
-            {
-                SHADOW_CASTER_FRAGMENT(i);
             }
             ENDCG
         }

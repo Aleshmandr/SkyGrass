@@ -1,9 +1,9 @@
-﻿Shader "Grass/TransparentTessellatedGrass"
+﻿Shader "Grass/TessellatedGrassShadow"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
-        _Color("Color", Color) =(1,1,1,1)
+        _Color1("Color 1", Color) =(1,1,1,1)
+        _Color2("Color 2", Color) = (0,0,0,0)
         _TessellationUniform ("Tessellation Uniform", Range(1, 64)) = 1
         _TessellationEdgeLength ("Tessellation Edge Length", float) = 1
         _Height("Height", float) = 3
@@ -23,18 +23,13 @@
         {
             Tags
             {
-                "Queue" = "AlphaTest"
-                "RenderType" = "Transparent"
+                "Queue" = "Geometry"
+                "RenderType" = "Opaque"
                 "LightMode" = "ForwardBase"
                 "IgnoreProjector" = "True"
             }
 
-            ZWrite Off
-
-            Blend SrcAlpha OneMinusSrcAlpha
-
             CGPROGRAM
-            #define SIMPLE_SHADOW 1
             #include "UnityCG.cginc"
             #include "GeometryGrass.cginc"
             #include "Tessellation.cginc"
@@ -46,15 +41,40 @@
             #pragma geometry geomTriangle
             #pragma multi_compile_fwdbase
 
-            fixed4 _Color;
-            sampler2D _MainTex;
-            fixed4 _MainTex_ST;
+            fixed3 _Color1;
+            fixed3 _Color2;
 
             half4 frag(g2f i) : COLOR
             {
-                fixed4 color = tex2D(_MainTex, i.uv) * _Color;
+                fixed4 color = lerp(_Color1, _Color2, i.uv.y).xyzz;
                 color.rgb *= sampleLight(i);
                 return color;
+            }
+            ENDCG
+        }
+        
+        Pass
+        {
+            Tags
+            {
+                "LightMode" = "ShadowCaster"
+            }
+
+            CGPROGRAM
+            #include "UnityCG.cginc"
+            #include "GeometryGrass.cginc"
+            #include "Tessellation.cginc"
+            #pragma target 4.6
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma hull hull
+            #pragma domain domain
+            #pragma geometry geomTriangle
+            #pragma multi_compile_shadowcaster
+
+            float4 frag(g2f i) : SV_Target
+            {
+                SHADOW_CASTER_FRAGMENT(i);
             }
             ENDCG
         }
