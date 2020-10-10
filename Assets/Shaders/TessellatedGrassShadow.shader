@@ -30,6 +30,7 @@
             }
 
             CGPROGRAM
+            #define SIMPLE_SHADOW 0
             #include "UnityCG.cginc"
             #include "GeometryGrass.cginc"
             #include "Tessellation.cginc"

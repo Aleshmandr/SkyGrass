@@ -13,7 +13,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2001
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -73,7 +73,7 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Height: 0.1
-    - _HeightOffset: 0.36
+    - _HeightOffset: 0.42
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -83,7 +83,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _StartHeight: 2.05
-    - _TessellationEdgeLength: 0
+    - _TessellationEdgeLength: 22
     - _TessellationUniform: 1.5
     - _Translucency: 0.5
     - _TranslucentGain: 0.5
