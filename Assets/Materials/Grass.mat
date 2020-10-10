@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Grass
-  m_Shader: {fileID: 4800000, guid: f5d0fde071320ee40b730bbd84b1e07d, type: 3}
+  m_Shader: {fileID: 4800000, guid: 4e81f797fc6664fd8b988b402c4b2891, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -94,7 +94,7 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color1: {r: 0.063055545, g: 0.22700001, b: 0.07566667, a: 0}
-    - _Color2: {r: 0.12568085, g: 0.71599996, b: 0.17138293, a: 1}
+    - _Color2: {r: 0.12568085, g: 0.71599996, b: 0.17138293, a: 0.59607846}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _RandomPosition: {r: 0.53, g: 0.05, b: 0.32, a: 0}
     - _WindDir: {r: 0.3, g: 0, b: 0.18, a: 0}

@@ -1,4 +1,4 @@
-﻿Shader "Grass/TessellatedGrass"
+﻿Shader "Grass/TransparentTessellatedGrass"
 {
     Properties
     {
@@ -19,15 +19,17 @@
 
     SubShader
     {
-        Tags
+         Tags
         {
-            "Queue" = "Geometry"
-            "RenderType" = "Opaque"
+            "Queue" = "Transparent"
+            "RenderType" = "Transparent"
             "LightMode" = "ForwardBase"
             "IgnoreProjector" = "True"
         }
         
-        Pass
+        Blend SrcAlpha OneMinusSrcAlpha
+        
+         Pass
         {
             CGPROGRAM
             #include "UnityCG.cginc"
@@ -41,12 +43,12 @@
             #pragma geometry geomTriangle
             #pragma multi_compile_fwdbase
 
-            fixed3 _Color1;
-            fixed3 _Color2;
+            fixed4 _Color1;
+            fixed4 _Color2;
 
             half4 frag(g2f i) : COLOR
             {
-                fixed4 color = lerp(_Color1, _Color2, i.uv.y).xyzz;
+                fixed4 color = lerp(_Color1, _Color2, i.uv.y);
                 color.rgb *= sampleLight(i);
                 return color;
             }
