@@ -27,9 +27,7 @@ struct g2f
     float4 pos : SV_POSITION;
     float3 worldNorm : NORMAL;
     unityShadowCoord4 _ShadowCoord : TEXCOORD1;
-    #if !UNITY_PASS_SHADOWCASTER
     float2 uv : TEXCOORD0;
-    #endif
 };
 
 float random(float3 co)
@@ -83,10 +81,10 @@ void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
     v[3].worldNorm = worldNormal;
     
     #if SIMPLE_SHADOW
-    v[0]._ShadowCoord = ComputeScreenPos(v[0].worldPos);
-    v[1]._ShadowCoord = ComputeScreenPos(v[1].worldPos);
-    v[2]._ShadowCoord = ComputeScreenPos(v[0].worldPos);
-    v[3]._ShadowCoord = ComputeScreenPos(v[1].worldPos);
+    v[0]._ShadowCoord = ComputeScreenPos(v[0].pos);
+    v[1]._ShadowCoord = ComputeScreenPos(v[1].pos);
+    v[2]._ShadowCoord = ComputeScreenPos(v[0].pos);
+    v[3]._ShadowCoord = ComputeScreenPos(v[1].pos);
     #else
     v[0]._ShadowCoord = ComputeScreenPos(v[0].pos);
     v[1]._ShadowCoord = ComputeScreenPos(v[1].pos);
@@ -94,13 +92,10 @@ void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
     v[3]._ShadowCoord = ComputeScreenPos(v[3].pos);
     #endif
 
-
-    #if !UNITY_PASS_SHADOWCASTER
     v[0].uv = float2(0, 0);
     v[1].uv = float2(1, 0);
     v[2].uv = float2(0, 1);
     v[3].uv = float2(1, 1);
-    #endif
 
     triStream.Append(v[0]);
     triStream.Append(v[2]);
