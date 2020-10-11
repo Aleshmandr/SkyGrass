@@ -106,6 +106,12 @@ void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
 }
 
 [maxvertexcount(4)]
+void geomPoints(point v2g i[1], inout TriangleStream<g2f> triStream)
+{
+    geomPoint(i[0], triStream);
+}
+
+[maxvertexcount(4)]
 void geomTriangle(triangle v2g i[3], inout TriangleStream<g2f> triStream)
 {
     geomPoint(i[0], triStream);

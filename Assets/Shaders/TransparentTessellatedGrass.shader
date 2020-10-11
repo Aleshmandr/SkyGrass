@@ -37,18 +37,27 @@
             #define SIMPLE_SHADOW 1
             #include "UnityCG.cginc"
             #include "GeometryGrass.cginc"
-            #include "Tessellation.cginc"
             #pragma target 4.6
             #pragma vertex vert
             #pragma fragment frag
-            #pragma hull hull
-            #pragma domain domain
-            #pragma geometry geomTriangle
+            #pragma geometry geomPoints
             #pragma multi_compile_fwdbase
 
             fixed4 _Color;
             sampler2D _MainTex;
             fixed4 _MainTex_ST;
+
+            struct vertexInput
+            {
+                float4 vertex : POSITION;
+                float3 normal : NORMAL;
+                float4 tangent : TANGENT;
+            };
+
+            vertexInput vert(vertexInput v)
+            {
+                return v;
+            }
 
             half4 frag(g2f i) : COLOR
             {
