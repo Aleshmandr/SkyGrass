@@ -690,7 +690,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 866194413}
   m_LocalRotation: {x: -0, y: 0.23407331, z: -0, w: 0.972219}
-  m_LocalPosition: {x: 81.37, y: 7.65, z: 46.93}
+  m_LocalPosition: {x: 82.59505, y: 7.65, z: 46.93}
   m_LocalScale: {x: 3.3401, y: 5.6438, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -895,6 +895,7 @@ GameObject:
   - component: {fileID: 543450653608839308}
   - component: {fileID: 3469287837591930665}
   - component: {fileID: 1711813855678624739}
+  - component: {fileID: 919132149154533943}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -902,6 +903,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!64 &919132149154533943
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149154533942}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 9127120572191758296, guid: 164833eb0af025a40b7b49fbea15765f, type: 3}
 --- !u!23 &1711813855678624739
 MeshRenderer:
   m_ObjectHideFlags: 0
