@@ -186,6 +186,31 @@ public class PointOctreeNode<T> {
 			}
 		}
 	}
+	
+	public void GetNearest(ref Vector3 position, ref float minSqrDistance, T result)
+	{
+		if ((bounds.ClosestPoint(position) - position).sqrMagnitude > minSqrDistance) {
+			return;
+		}
+
+		// Check against any objects in this node
+		for (int i = 0; i < objects.Count; i++)
+		{
+			float sqrDistance = (position - objects[i].Pos).sqrMagnitude;
+			if (sqrDistance < minSqrDistance)
+			{
+				result = objects[i].Obj;
+				minSqrDistance = sqrDistance;
+			}
+		}
+
+		// Check children
+		if (children != null) {
+			for (int i = 0; i < 8; i++) {
+				children[i].GetNearest(ref position, ref minSqrDistance, result);
+			}
+		}
+	}
 
 	/// <summary>
 	/// Return all objects in the tree.

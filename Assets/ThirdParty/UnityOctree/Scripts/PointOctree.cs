@@ -51,17 +51,18 @@ public class PointOctree<T> {
 	/// </summary>
 	/// <param name="obj">Object to add.</param>
 	/// <param name="objPos">Position of the object.</param>
-	public void Add(T obj, Vector3 objPos) {
+	public bool TryAdd(T obj, Vector3 objPos) {
 		// Add object or expand the octree until it can be added
 		int count = 0; // Safety check against infinite/excessive growth
 		while (!rootNode.Add(obj, objPos)) {
 			Grow(objPos - rootNode.Center);
 			if (++count > 20) {
 				Debug.LogError("Aborted Add operation as it seemed to be going on forever (" + (count - 1) + ") attempts at growing the octree.");
-				return;
+				return false;
 			}
 		}
 		Count++;
+		return true;
 	}
 
 	/// <summary>
@@ -139,6 +140,13 @@ public class PointOctree<T> {
 		List<T> collidingWith = new List<T>();
 		rootNode.GetNearby(ref position, maxDistance, collidingWith);
 		return collidingWith.ToArray();
+	}
+	
+	public T GetNearest(Vector3 position, ref float minSqrDistance)
+	{
+		T result = default;
+		rootNode.GetNearest(ref position, ref minSqrDistance, result);
+		return result;
 	}
 
 	/// <summary>
