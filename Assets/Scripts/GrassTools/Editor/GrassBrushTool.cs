@@ -46,7 +46,8 @@ public class GrassBrushTool : EditorTool
         if(Physics.Raycast(ray, out var hit))
         {
             Handles.DrawWireDisc(hit.point, hit.normal, radius);
-            if (Event.current.type == EventType.MouseDown || Event.current.type == EventType.MouseDrag)
+            if (Event.current.button == 0
+                && (Event.current.type == EventType.MouseDown || Event.current.type == EventType.MouseDrag))
             {
                 GUIUtility.hotControl = controlId;
                 Event.current.Use();
