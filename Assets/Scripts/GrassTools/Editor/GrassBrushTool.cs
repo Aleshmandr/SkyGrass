@@ -16,12 +16,13 @@ public class GrassBrushTool : EditorTool
     private int spawnCount = 10;
     private float radius = 1f;
     private int controlId;
-    
+
     public override GUIContent toolbarIcon => iconContent;
 
     private void OnEnable()
     {
         Debug.Log("Brush enable");
+
         controlId = GUIUtility.GetControlID(FocusType.Passive);
         iconContent = new GUIContent()
         {
@@ -36,14 +37,15 @@ public class GrassBrushTool : EditorTool
     {
         EditorGUI.BeginChangeCheck();
 
-        GrassRenderer grassRenderer = null;
-        if(Selection.activeGameObject == null || !Selection.activeGameObject.TryGetComponent(out grassRenderer)) {
+        if (Selection.activeGameObject == null ||
+            !Selection.activeGameObject.TryGetComponent(out GrassSurface grassRenderer) || grassRenderer.Mesh == null)
+        {
             return;
         }
-            
-        Ray ray = HandleUtility.GUIPointToWorldRay( Event.current.mousePosition );
+       
+        Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
 
-        if(Physics.Raycast(ray, out var hit))
+        if (Physics.Raycast(ray, out var hit))
         {
             Handles.DrawWireDisc(hit.point, hit.normal, radius);
             if (Event.current.button == 0
@@ -51,11 +53,18 @@ public class GrassBrushTool : EditorTool
             {
                 GUIUtility.hotControl = controlId;
                 Event.current.Use();
-                Debug.Log(hit.transform.gameObject.name);
-                CreatePoints(grassRenderer, hit.point, hit.normal);
+
+                if (Event.current.shift)
+                {
+                    grassRenderer.RemovePoints(hit.point, radius);
+                }
+                else
+                {
+                    CreatePoints(grassRenderer, hit.point, hit.normal);
+                }
             }
         }
-        
+
 
         //using (new Handles.DrawingScope(Color.green))
         //{
@@ -70,12 +79,16 @@ public class GrassBrushTool : EditorTool
             //    transform.position += delta;
         }
     }
+    
 
-    private void CreatePoints(GrassRenderer renderer, Vector3 point, Vector3 normal) {
-        Vector3[] points = new[] {point};
-        for(int i = 0; i < spawnCount; i++) {
-           Vector3 a =  UnityEngine.Random.insideUnitCircle;
+    private void CreatePoints(GrassSurface grassSurface, Vector3 point, Vector3 normal)
+    {
+        Vector3[] newPoints = new[] {point};
+        for (int i = 0; i < spawnCount; i++)
+        {
+            Vector3 a = UnityEngine.Random.insideUnitCircle;
         }
-        renderer.AddPoints(points);
+
+        grassSurface.AddPoints(newPoints);
     }
 }
