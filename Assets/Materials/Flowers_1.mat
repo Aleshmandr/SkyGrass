@@ -78,6 +78,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _RandomHeightOffset: -0.2
     - _SmoothnessTextureChannel: 0
     - _SpecPower: 9.1
     - _SpecularHighlights: 1
@@ -96,7 +97,8 @@ Material:
     - _Color1: {r: 1, g: 1, b: 1, a: 1}
     - _Color2: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RandomPosition: {r: 0.92, g: -1.96, b: 0.47, a: 0}
+    - _RandomPosition: {r: 0, g: 0, b: 0, a: 0}
+    - _Size: {r: 0.15, g: 0.15, b: 0, a: 0}
     - _WindDir: {r: 0.3, g: 0, b: 0.18, a: 0}
     - _WindFrequency: {r: 0.03, g: 0.03, b: 0, a: 0}
   m_BuildTextureStacks: []

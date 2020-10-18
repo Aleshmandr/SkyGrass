@@ -1,16 +1,14 @@
-﻿Shader "Grass/TransparentTessellatedGrass"
+﻿Shader "Grass/TransparentGrass"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Color("Color", Color) =(1,1,1,1)
-        _TessellationUniform ("Tessellation Uniform", Range(1, 64)) = 1
-        _TessellationEdgeLength ("Tessellation Edge Length", float) = 1
-        _Height("Height", float) = 3
+        _Size("Size (h, w, rand h, rand w)", vector) = (0.2, 0.05, 0, 0)
         _Width("Width", float) = 0.05
-        _RandomPosition("Random Position", vector) = (0, 0, 0, 0)
         _Translucency("Translucency", float) = 0.5
         _HeightOffset("Height Offset", float) = 0
+        _RandomHeightOffset("Random Height Offset", float) = 0
         [Header(Wind)]
         _WindDistortionMap("Wind Distortion Map", 2D) = "white" {}
         _WindStrength("Wind Strength", float) = 1

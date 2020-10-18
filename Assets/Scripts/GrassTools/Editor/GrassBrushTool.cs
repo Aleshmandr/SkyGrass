@@ -42,7 +42,7 @@ public class GrassBrushTool : EditorTool
         {
             return;
         }
-       
+
         Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
 
         if (Physics.Raycast(ray, out var hit))
@@ -79,16 +79,23 @@ public class GrassBrushTool : EditorTool
             //    transform.position += delta;
         }
     }
-    
+
 
     private void CreatePoints(GrassSurface grassSurface, Vector3 point, Vector3 normal)
     {
-        Vector3[] newPoints = new[] {point};
+        List<Vector3> newPoints =new List<Vector3>();
         for (int i = 0; i < spawnCount; i++)
         {
-            Vector3 a = UnityEngine.Random.insideUnitCircle;
+            Vector3 grassPos = UnityEngine.Random.insideUnitCircle * radius;
+            Quaternion rotation = Quaternion.FromToRotation(Vector3.forward, normal);
+            grassPos = point + rotation * grassPos;
+            Vector3 rayPos = grassPos + normal * radius;
+            Ray grassRay =  new Ray(rayPos, -normal);
+            if (Physics.Raycast(grassRay, out RaycastHit hitInfo, radius * 2))
+            {
+                newPoints.Add(hitInfo.point);
+            }
         }
-
-        grassSurface.AddPoints(newPoints);
+        grassSurface.AddPoints(newPoints.ToArray());
     }
 }

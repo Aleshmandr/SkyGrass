@@ -1,10 +1,9 @@
 #include "Autolight.cginc"
 #include "UnityLightingCommon.cginc"
 
-fixed4 _RandomPosition;
-fixed _Width;
-fixed _Height;
+fixed4 _Size; //h,w, rand h, rand w
 fixed _HeightOffset;
+fixed _RandomHeightOffset;
 
 fixed _SpecPower;
 fixed _Translucency;
@@ -39,10 +38,8 @@ float random(float3 co)
 void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
 {
     float rand = random(i.pos);
-    fixed3 binormal = cross(i.norm, i.tangent);
-    fixed3 offset = rand * _RandomPosition * (i.tangent.xyz + i.norm + binormal);
 
-    float4 root = i.pos + fixed4(offset, 0);
+    float4 root = i.pos;
     float3 rootWorld = mul(unity_ObjectToWorld, root);
 
     g2f v[4];
@@ -52,17 +49,20 @@ void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
     float2 windSample = (tex2Dlod(_WindDistortionMap, float4(windUV, 0, 0)).xy * 2 - 1) * _WindStrength;
     float3 wind = float3(windSample.r, 0, windSample.g);
 
-    root.xyz += wind * offset * _WindFrequency.z;
+    root.xyz += wind * _WindFrequency.z;
     float3 grassDirection = normalize(fixed3(0, 1, 0) + wind);
 
     //Use camera forward instead view dir
     fixed3 viewDir = UNITY_MATRIX_IT_MV[2].xyz;
-    
+
 
     fixed4 left = float4(normalize(cross(viewDir, grassDirection).xyz), 0);
 
-    fixed4 grassTop = root + fixed4(grassDirection * (_Height + _HeightOffset), 0);
-    fixed4 grassBottom = root + fixed4(grassDirection * _HeightOffset, 0);
+    fixed heigth = _Size.x + _Size.z * rand;
+    fixed width = _Size.y + _Size.w * rand;
+    fixed heigthOffset = _HeightOffset + _RandomHeightOffset*rand;
+    fixed4 grassTop = root + fixed4(grassDirection * (heigth + heigthOffset), 0);
+    fixed4 grassBottom = root + fixed4(grassDirection * heigthOffset, 0);
 
     fixed3 norm = normalize(cross(grassTop - root, left));
 
@@ -71,15 +71,15 @@ void geomPoint(point v2g i, inout TriangleStream<g2f> triStream)
     v[0].pos = UnityObjectToClipPos(grassBottom);
     v[0].worldNorm = worldNormal;
 
-    v[1].pos = UnityObjectToClipPos(grassBottom + left * _Width);
+    v[1].pos = UnityObjectToClipPos(grassBottom + left * width);
     v[1].worldNorm = worldNormal;
 
     v[2].pos = UnityObjectToClipPos(grassTop);
     v[2].worldNorm = worldNormal;
 
-    v[3].pos = UnityObjectToClipPos(grassTop + left * _Width);
+    v[3].pos = UnityObjectToClipPos(grassTop + left * width);
     v[3].worldNorm = worldNormal;
-    
+
     #if SIMPLE_SHADOW
     v[0]._ShadowCoord = ComputeScreenPos(v[0].pos);
     v[1]._ShadowCoord = ComputeScreenPos(v[1].pos);
