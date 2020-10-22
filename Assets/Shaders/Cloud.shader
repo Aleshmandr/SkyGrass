@@ -4,6 +4,7 @@
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Radius ("Radius", float) = 0.5
+        _EnergyC ("Energy C", float) = 0.05
     }
     SubShader
     {
@@ -12,19 +13,24 @@
             "RenderType"="Transparent" "Queue"="Transparent"
         }
 
-        Blend SrcAlpha OneMinusSrcAlpha
-        Cull Off
+        Pass
+        {
+            ZWrite On
+            Colormask 0
+        }
 
         Pass
         {
+            Blend SrcAlpha OneMinusSrcAlpha
+            Cull Off
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma fragmentoption ARB_precision_hint_nicest
 
             #include "UnityCG.cginc"
-            #define MAX_STEPS 100
-            #define RAY_MAX_DIST 10000
+            #define MAX_STEPS 110
+            #define RAY_MAX_DIST 10
             #define RAY_HIT_THRESH 0.01
 
             struct appdata
@@ -42,10 +48,40 @@
             };
 
             float _Radius;
+            float _EnergyC;
 
             float distFunc(float3 p)
             {
                 return length(p) - _Radius;
+            }
+
+            float raymarchEnergy(float3 rayOrigin, float3 rayDirection)
+            {
+                float dist = 0;
+                float rayEnergy = 1;
+                for (int i = 0; i < MAX_STEPS; i++)
+                {
+                    float3 p = rayOrigin + rayDirection * dist;
+                    float ds = distFunc(p);
+                    float dsAbs = abs(ds);
+
+                    if (dsAbs <= RAY_HIT_THRESH)
+                    {
+                        dsAbs += RAY_HIT_THRESH;
+                        ds = sign(ds) * RAY_HIT_THRESH;
+                    }
+                    dist += dsAbs;
+                    if (ds < 0)
+                    {
+                        rayEnergy -= ds *ds * _EnergyC;
+                    }
+
+                    if (rayEnergy <= 0 || dist > RAY_MAX_DIST)
+                    {
+                        break;
+                    }
+                }
+                return clamp(rayEnergy, 0,1);
             }
 
             float raymarch(float3 rayOrigin, float3 rayDirection)
@@ -65,23 +101,6 @@
                 return dist;
             }
 
-            float raymarch2(float3 rayOrigin, float3 rayDirection)
-            {
-                //return distFunc(rayOrigin);
-                float dist = 0;
-                for (int i = 0; i < MAX_STEPS; i++)
-                {
-                    float3 p = rayOrigin + rayDirection * dist;
-                    float ds = distFunc(p);
-                    dist += ds;
-                    if (ds < RAY_HIT_THRESH || dist > RAY_MAX_DIST)
-                    {
-                        return ds;
-                    }
-                }
-                return RAY_MAX_DIST;
-            }
-
             v2f vert(appdata v)
             {
                 v2f o;
@@ -96,8 +115,8 @@
             fixed4 frag(v2f i) : SV_Target
             {
                 float3 rd = normalize(i.pos - i.ro);
-                float rm = raymarch(i.ro, rd);
-                return fixed4(rm.xxx / 10, 1);
+                float rm = raymarchEnergy(i.ro, rd);
+                return fixed4(1, 1, 1, 1 - rm);
             }
             ENDCG
         }
