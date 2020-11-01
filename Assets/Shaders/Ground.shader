@@ -44,6 +44,11 @@
             sampler2D _FlakesNormTex;
             fixed4 _FlakesNormTex_ST;
 
+            sampler2D _WindDistortionMap;
+            float4 _WindDistortionMap_ST;
+            float _WindStrength;
+            fixed3 _WindFrequency;
+
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -62,6 +67,7 @@
                 half3 tspace0 : TEXCOORD2; // tangent.x, bitangent.x, normal.x
                 half3 tspace1 : TEXCOORD3; // tangent.y, bitangent.y, normal.y
                 half3 tspace2 : TEXCOORD4; // tangent.z, bitangent.z, normal.z
+                fixed2 wind : TEXCOORD6; // tangent.z, bitangent.z, normal.z
                 SHADOW_COORDS(5) // put shadows data into TEXCOORD5
             };
 
@@ -70,9 +76,13 @@
                 v2f o;
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex);
-                //o.worldPos = UnityObjectToClipPos(v.vertex);
+
+                float2 windUV =   o.pos * _WindDistortionMap_ST.xy + _WindFrequency.xy * _Time.y;
+                float2 windSample = (tex2Dlod(_WindDistortionMap, float4(windUV, 0, 0)).xy * 2 - 1) * _WindStrength;
+                o.wind = windSample.rg;
+
                 o.uv0 = TRANSFORM_TEX(v.texcoord, _MainTex);
-                o.uv1 = TRANSFORM_TEX(v.texcoord, _FlakesNormTex);
+                o.uv1 = TRANSFORM_TEX(v.texcoord, _FlakesNormTex);// + o.wind;
 
                 half3 wNormal = UnityObjectToWorldNormal(v.normal);
                 half3 wTangent = UnityObjectToWorldDir(v.tangent.xyz);
@@ -94,12 +104,13 @@
                 float3 viewDirection = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
                 //half3 worldViewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
                 // sample the normal map, and decode from the Unity encoding
-                half3 tnormal = UnpackNormal(tex2D(_FlakesNormTex, i.uv1));
+                half3 tnormal = UnpackNormal(tex2D(_FlakesNormTex, i.uv1) + i.wind.xyyy);
                 // transform normal from tangent to world space
                 half3 worldNormal;
                 worldNormal.x = dot(i.tspace0, tnormal);
                 worldNormal.y = dot(i.tspace1, tnormal);
                 worldNormal.z = dot(i.tspace2, tnormal);
+                //worldNormal.xz+=;
 
 
                 //return color +//saturate(abs((tnormal.x) + abs(tnormal.y))
